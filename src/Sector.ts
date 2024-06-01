@@ -251,7 +251,7 @@ export class Sector implements NodeObserver, GlobalObserver
   renderBackground(): void
   {
     push();
-      translate(this._sectorRoot.position.x, this._sectorRoot.position.y - 45);
+      translate(this._sectorRoot.position.x, this._sectorRoot.position.y);
       this.drawSectorBackdrop();
     pop();
 
