@@ -6,6 +6,8 @@ import { playerData } from "./app";
 
 export abstract class OWScreen implements ButtonObserver
 {
+  static RIGHT_MARGIN: number = 200;
+
   active: boolean = false;
   overlay: boolean = false;
 
@@ -23,10 +25,10 @@ export abstract class OWScreen implements ButtonObserver
     
     for (let i: number = 0; i < this._starPositions.length; i++)
     {
-      this._starPositions[i] = new Vector2(random(0, width), random(90, height - 90));
+      this._starPositions[i] = new Vector2(random(0, width), random(0, height));
     }
 
-    this._toolbarRoot = new Entity(width/2, height - 50);
+    this._toolbarRoot = new Entity(width - 100, 0);
   }
   
   addButton(button: Button): void
@@ -61,22 +63,23 @@ export abstract class OWScreen implements ButtonObserver
   updateToolbarPositions(): void
   {
     const margins: number = 10;
-    let toolbarWidth: number = -margins;
+    let toolbarHeight: number = -margins;
 
     for (let i: number = 0; i < this._toolbarButtons.length; i++)
     {
-      toolbarWidth += margins;
-      toolbarWidth += this._toolbarButtons[i].getWidth();
+      toolbarHeight += margins;
+      toolbarHeight += this._toolbarButtons[i].getHeight();
     }
 
-    let xPos: number = -(toolbarWidth * 0.5);
+    let yPos: number = height - 150;
 
     for (let i: number = 0; i < this._toolbarButtons.length; i++)
     {
-      const buttonHalfWidth: number = this._toolbarButtons[i].getWidth() * 0.5;
-      xPos += buttonHalfWidth;
-      this._toolbarButtons[i].setPosition(xPos, 0);
-      xPos += buttonHalfWidth + margins;
+      yPos -= margins;
+      const buttonHalfHeight: number = this._toolbarButtons[i].getHeight() * 0.5;
+      yPos -= buttonHalfHeight;
+      this._toolbarButtons[i].setPosition(0, yPos);
+      yPos -= buttonHalfHeight;
     }
   }
   
@@ -101,7 +104,7 @@ export abstract class OWScreen implements ButtonObserver
   renderBackground(): void
   {
     let bgColor: Color = color(0, 0, 0);
-    let starColor: Color = color(0, 0, 100);
+    let starColor: Color = color(0, 0, 100, 50);
 
     // superhack to invert colors when player is at EYE_OF_THE_UNIVERSE
     if (playerData.isPlayerAtEOTU())

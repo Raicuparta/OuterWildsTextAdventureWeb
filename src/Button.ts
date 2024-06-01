@@ -45,6 +45,11 @@ export class Button extends Entity
   {
     return this._bounds.x;
   }
+
+  getHeight(): number
+  {
+    return this._bounds.y;
+  }
   
   setObserver(observer: ButtonObserver): void
   {

@@ -9,6 +9,7 @@ import { StatusFeed } from "./StatusFeed";
 import { TimeLoop } from "./TimeLoop";
 import { Minim, preloadAudio, preloadJSONObject, println } from "./compat";
 import { GameSave } from "./GameSave";
+import { OWScreen } from "./Screen";
 
 /*** GLOBALS ***/
 export const TEXT_SIZE: number = 14;
@@ -55,7 +56,7 @@ export let mediumFontData: Font;
 (window as any).setup = function setup(): void
 {
   const canvas = document.getElementById("game-canvas");
-  createCanvas(960, 720, null, canvas);
+  createCanvas(960 + OWScreen.RIGHT_MARGIN, 720 - 90, null, canvas);
 
   // Prevent p5 from setting canvas size, we do it in css.
   canvas.style.removeProperty("width");

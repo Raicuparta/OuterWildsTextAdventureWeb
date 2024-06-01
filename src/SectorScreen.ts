@@ -50,8 +50,9 @@ export class SectorScreen extends OWScreen implements NodeButtonObserver, NodeAc
     this.addButtonToToolbar(this._waitButton  = new Button("Wait [1 min]", 0, 0, 150, 50));
     this.addButtonToToolbar(this._liftoffButton  = new Button("Leave Sector", 0, 0, 150, 50));
     this._liftoffButton.setDisabledPrompt("Leave Sector\n(must be at ship)");
-    this.addButtonToToolbar(this._primaryActionButton  = new Button("Move", 0, 0, 75, 50));
-    this.addButtonToToolbar(this._secondaryActionButton  = new Button("Probe", 0, 0, 75, 50));
+    this.addButtonToToolbar(this._secondaryActionButton  = new Button("Shoot Probe", 0, 0, 150, 50));
+    this.addButtonToToolbar(this._primaryActionButton  = new Button("Explore", 0, 0, 150, 50));
+    this.refreshAvailableActions();
   }
 
   onEnter(): void
@@ -99,12 +100,14 @@ export class SectorScreen extends OWScreen implements NodeButtonObserver, NodeAc
       this._actions
         .filter(action => action._mouseButton === LEFT)
         .forEach(action => action.execute());
+      this.refreshAvailableActions();
     }
     else if (button == this._secondaryActionButton)
     {
       this._actions
         .filter(action => action._mouseButton === RIGHT)
         .forEach(action => action.execute());
+      this.refreshAvailableActions();
     }
   }
 
@@ -263,7 +266,7 @@ export class SectorScreen extends OWScreen implements NodeButtonObserver, NodeAc
 
     if (this._player.currentNode != this._focusNode)
     {
-      this._primaryActionButton.id = "Move";
+      this._primaryActionButton.id = "Move To Selected";
       if (this._focusNode.inRange())
       {
         if (this._focusNode.isProbeable())

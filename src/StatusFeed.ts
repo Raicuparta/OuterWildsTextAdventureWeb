@@ -38,7 +38,7 @@ export class StatusFeed implements GlobalObserver
   {
     for (let i: number = 0; i < this._feed.length; i++)
     {
-      if (!this._feed[i].draw(20, 30 + i * 25))
+      if (!this._feed[i].draw(120, 550 + i * 25))
       {
         break; // break if the current line hasn't finished displaying
       }

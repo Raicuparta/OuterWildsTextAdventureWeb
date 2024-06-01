@@ -251,17 +251,17 @@ export class Sector implements NodeObserver, GlobalObserver
   renderBackground(): void
   {
     push();
-      translate(this._sectorRoot.position.x, this._sectorRoot.position.y);
+      translate(this._sectorRoot.position.x, this._sectorRoot.position.y - 45);
       this.drawSectorBackdrop();
     pop();
 
     // draw letterbox
-    fill(0, 0, 0);
-    noStroke();
-    rectMode(CORNER);
-    rect(0, 0, width, 90);
-    rect(0, height - 90, width, 90);
-    rectMode(CENTER);
+    // fill(0, 0, 0);
+    // noStroke();
+    // rectMode(CORNER);
+    // // rect(0, 0, width, 90);
+    // rect(0, height - 90, width, 90);
+    // rectMode(CENTER);
   }
   
   render(): void
