@@ -30,6 +30,7 @@ export class OWNode extends Entity implements ButtonObserver, GlobalObserver
   shipAccess: boolean = false;
   allowTelescope: boolean = true;
   gravity: boolean = true;
+  isFocused: boolean = false;
 
   _signal: Signal | null = null;
   
@@ -239,6 +240,10 @@ export class OWNode extends Entity implements ButtonObserver, GlobalObserver
     if (!this._visible) {return;}
     this._button.enabled = this.inRange() || EDIT_MODE;
     this._button.update();
+
+    if (this.isFocused) {
+      this._button.hoverState = true;
+    }
   }
 
   getAlpha(): number
@@ -392,9 +397,9 @@ export class OWNode extends Entity implements ButtonObserver, GlobalObserver
   
   onButtonExitHover(button: Button): void
   {
-    for (let i: number = 0; i < this._observers.length; i++)
-    {
-      this._observers[i].onNodeLoseFocus(this);
-    }
+    // for (let i: number = 0; i < this._observers.length; i++)
+    // {
+    //   this._observers[i].onNodeLoseFocus(this);
+    // }
   }
 }

@@ -24,6 +24,8 @@ export class SectorScreen extends OWScreen implements NodeButtonObserver, NodeAc
 
   _databaseButton: Button;
   _liftoffButton: Button;
+  _secondaryActionButton: Button;
+  _primaryActionButton: Button;
   _waitButton: Button;
   _telescopeButton: Button;
 
@@ -47,6 +49,8 @@ export class SectorScreen extends OWScreen implements NodeButtonObserver, NodeAc
 
     this.addButtonToToolbar(this._waitButton  = new Button("Wait [1 min]", 0, 0, 150, 50));
     this.addButtonToToolbar(this._liftoffButton  = new Button("Leave Sector", 0, 0, 150, 50));
+    this.addButtonToToolbar(this._primaryActionButton  = new Button("Move", 0, 0, 75, 50));
+    this.addButtonToToolbar(this._secondaryActionButton  = new Button("Probe", 0, 0, 75, 50));
     this._liftoffButton.setDisabledPrompt("Leave Sector\n(must be at ship)");
   }
 
@@ -55,6 +59,10 @@ export class SectorScreen extends OWScreen implements NodeButtonObserver, NodeAc
     this._sector.addNodeButtonObserver(this);
     this._sector.addNodeButtonObserver(this._editor);
     this._sector.updateNodeRanges(this.isPlayerInShip(), this._player.currentNode);
+
+    if (this._focusNode != null) {
+      this._focusNode.isFocused = false;
+    }
     this._focusNode = null;
   }
   
@@ -85,6 +93,18 @@ export class SectorScreen extends OWScreen implements NodeButtonObserver, NodeAc
     else if (button == this._waitButton)
     {
       timeLoop.waitFor(1);
+    }
+    else if (button == this._primaryActionButton)
+    {
+      this._actions
+        .filter(action => action._mouseButton === LEFT)
+        .forEach(action => action.execute());
+    }
+    else if (button == this._secondaryActionButton)
+    {
+      this._actions
+        .filter(action => action._mouseButton === RIGHT)
+        .forEach(action => action.execute());
     }
   }
 
@@ -122,6 +142,8 @@ export class SectorScreen extends OWScreen implements NodeButtonObserver, NodeAc
     // update action button visibility
     this._liftoffButton.enabled = (this._player.currentNode == this._ship.currentNode);
     this._telescopeButton.enabled = (this._player.currentNode != null && this._player.currentNode.allowTelescope && this._player.currentSector.allowTelescope());
+    this._primaryActionButton.enabled = this._focusNode != null && this._player.currentNode != this._focusNode && this._focusNode.inRange();
+    this._secondaryActionButton.enabled = this._focusNode != null && this._player.currentNode != this._focusNode && this._focusNode.inRange() && this._focusNode.isProbeable();
 
     this._sector.update();
     if (EDIT_MODE) this._editor.update();
@@ -148,7 +170,7 @@ export class SectorScreen extends OWScreen implements NodeButtonObserver, NodeAc
     if (!this.active) return;
     if (EDIT_MODE) this._editor.render();
 
-    this.drawNodeGUI(this._focusNode, this._actions);
+    // this.drawNodeGUI(this._focusNode, this._actions);
   }
 
   drawNodeGUI(target: OWNode, actions: NodeAction[]): void
@@ -194,21 +216,27 @@ export class SectorScreen extends OWScreen implements NodeButtonObserver, NodeAc
   onNodeSelected(node: OWNode): void
   {
     /** EXCECUTE ACTION **/
-    for (let i: number = 0; i < this._actions.length; i++) 
-    {
-      if (this._actions[i].getMouseButton() == mouseButton)
-      {
-        this._actions[i].execute();
-        break;
-      }
-    }
+    // for (let i: number = 0; i < this._actions.length; i++) 
+    // {
+    //   if (this._actions[i].getMouseButton() == mouseButton)
+    //   {
+    //     this._actions[i].execute();
+    //     break;
+    //   }
+    // }
 
     this.refreshAvailableActions();
   }
   
   onNodeGainFocus(node: OWNode): void
   {
+    if (this._focusNode != null) {
+      this._focusNode.isFocused = false;
+    }
     this._focusNode = node;
+    if (this._focusNode != null) {
+      this._focusNode.isFocused = true;
+    }
     this.refreshAvailableActions();
   }
   
@@ -216,6 +244,9 @@ export class SectorScreen extends OWScreen implements NodeButtonObserver, NodeAc
   {
     if (node == this._focusNode)
     {
+      if (this._focusNode != null) {
+        this._focusNode.isFocused = false;
+      }
       this._focusNode = null;
       this.refreshAvailableActions();
     }
