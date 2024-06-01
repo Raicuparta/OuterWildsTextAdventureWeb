@@ -1,8 +1,10 @@
 # Outer Wilds Text Adventure - Unofficial Mobile Web Port
 
+[Play it here](http://hawk.bar/OuterWildsTextAdventureWeb/)
+
 More information in the [original repo by Hawbat](https://github.com/Hawkbat/OuterWildsTextAdventureWeb).
 
-I just made some changes to make it more friendly for mobile. [Play it here](http://hawk.bar/OuterWildsTextAdventureWeb/)
+I just made some changes to make it more friendly for mobile.
 
 # Copyright Notice
 
