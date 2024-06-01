@@ -49,9 +49,9 @@ export class SectorScreen extends OWScreen implements NodeButtonObserver, NodeAc
 
     this.addButtonToToolbar(this._waitButton  = new Button("Wait [1 min]", 0, 0, 150, 50));
     this.addButtonToToolbar(this._liftoffButton  = new Button("Leave Sector", 0, 0, 150, 50));
+    this._liftoffButton.setDisabledPrompt("Leave Sector\n(must be at ship)");
     this.addButtonToToolbar(this._primaryActionButton  = new Button("Move", 0, 0, 75, 50));
     this.addButtonToToolbar(this._secondaryActionButton  = new Button("Probe", 0, 0, 75, 50));
-    this._liftoffButton.setDisabledPrompt("Leave Sector\n(must be at ship)");
   }
 
   onEnter(): void
@@ -142,7 +142,7 @@ export class SectorScreen extends OWScreen implements NodeButtonObserver, NodeAc
     // update action button visibility
     this._liftoffButton.enabled = (this._player.currentNode == this._ship.currentNode);
     this._telescopeButton.enabled = (this._player.currentNode != null && this._player.currentNode.allowTelescope && this._player.currentSector.allowTelescope());
-    this._primaryActionButton.enabled = this._focusNode != null && this._player.currentNode != this._focusNode && this._focusNode.inRange();
+    this._primaryActionButton.enabled = this._focusNode != null && this._focusNode.inRange();
     this._secondaryActionButton.enabled = this._focusNode != null && this._player.currentNode != this._focusNode && this._focusNode.inRange() && this._focusNode.isProbeable();
 
     this._sector.update();
@@ -263,6 +263,7 @@ export class SectorScreen extends OWScreen implements NodeButtonObserver, NodeAc
 
     if (this._player.currentNode != this._focusNode)
     {
+      this._primaryActionButton.id = "Move";
       if (this._focusNode.inRange())
       {
         if (this._focusNode.isProbeable())
@@ -282,6 +283,7 @@ export class SectorScreen extends OWScreen implements NodeButtonObserver, NodeAc
     }
     else
     {
+      this._primaryActionButton.id = "Explore";
       if (this._focusNode.isExplorable())
       {
         this._actions.push(new ExploreAction(LEFT, this._focusNode, this));
